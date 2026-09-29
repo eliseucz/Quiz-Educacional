@@ -4,74 +4,74 @@
 classDiagram
 
     class Pergunta {
-        -String enunciado
-        -List~String~ alternativas
-        -int indice_resposta_correta
-        -String dificuldade
-        -String tema
-        +validar_alternativas() bool
-        +validar_indice_resposta() bool
-        +__str__() String
-        +__eq__(outra) bool
+        -enunciado
+        -alternativas
+        -indice_resposta_correta
+        -dificuldade
+        -tema
+        +validar_alternativas()
+        +validar_indice_resposta() 
+        +__str__()
+        +__eq__(outra) 
     }
 
     class ValidadorAlternativas {
-        +validar_quantidade(alternativas) bool
-        +validar_indice(indice, alternativas) bool
+        +validar_quantidade(alternativas)
+        +validar_indice(indice, alternativas) 
     }
 
     class PerguntaMultiplaEscolha {
-        +validar() bool
-        +__str__() String
+        +validar() 
+        +__str__()
     }
 
     class Quiz {
-        -String titulo
-        -List~Pergunta~ perguntas
-        -int numero_tentativas_maximo
-        -int tempo_limite_minutos
-        -int pontuacao_maxima
-        +adicionar_pergunta(pergunta) None
-        +calcular_pontuacao_maxima() int
-        +pode_realizar(usuario) bool
-        +__str__() String
-        +__len__() int
+        -titulo
+        -perguntas
+        -numero_tentativas_maximo
+        -tempo_limite_minutos
+        -pontuacao_maxima
+        +adicionar_pergunta(pergunta) 
+        +calcular_pontuacao_maxima()
+        +pode_realizar(usuario) 
+        +__str__() 
+        +__len__() 
         +__iter__()
     }
 
     class Usuario {
-        -String nome
-        -String email
-        -String matricula_id
-        -List~Tentativa~ tentativas
-        +adicionar_tentativa(tentativa) None
-        +calcular_taxa_acerto() float
-        +calcular_desempenho_por_tema() dict
-        +__str__() String
+        -nome
+        -email
+        -matricula_id
+        -tentativas
+        +adicionar_tentativa(tentativa) 
+        +calcular_taxa_acerto() 
+        +calcular_desempenho_por_tema() 
+        +__str__() 
     }
 
     class Tentativa {
         -Usuario usuario
         -Quiz quiz
-        -List~int~ respostas
-        -float pontuacao
-        -float tempo_total
-        -float taxa_acertos
-        -bool concluida
-        -String data_hora
-        +iniciar() None
-        +registrar_resposta(indice) None
-        +finalizar() None
-        +calcular_pontuacao() float
-        +calcular_taxa_acertos() float
+        -respostas
+        -pontuacao
+        -tempo_total
+        -taxa_acertos
+        -concluida
+        -data_hora
+        +iniciar() 
+        +registrar_resposta(indice) 
+        +finalizar() 
+        +calcular_pontuacao() 
+        +calcular_taxa_acertos() 
     }
 
     class Estatistica {
-        +desempenho_usuario(usuario) dict
-        +desempenho_por_tema(usuario) dict
-        +ranking_usuarios(usuarios) list
-        +questoes_mais_erradas(tentativas) list
-        +evolucao_usuario(usuario) list
+        +desempenho_usuario(usuario) 
+        +desempenho_por_tema(usuario) 
+        +ranking_usuarios(usuarios) 
+        +questoes_mais_erradas(tentativas) 
+        +evolucao_usuario(usuario) 
     }
 
     PerguntaMultiplaEscolha --|> Pergunta
