@@ -34,6 +34,6 @@ O módulo `dados.py` será responsável por salvar e carregar quizzes, perguntas
 
 ## 6. Estado atual
 
-Esta versão corresponde à primeira etapa do Projeto 1. 
+Esta versão corresponde à segunda etapa do Projeto 1. 
 As classes foram criadas como estrutura inicial, contendo docstrings que registram sua finalidade. 
 A implementação das regras de negócio, validações, persistência, testes e interface será realizada nas etapas seguintes.
