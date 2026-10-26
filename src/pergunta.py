@@ -25,12 +25,12 @@ class Pergunta:
 
     @property
     def enunciado(self) -> str:
-        """Retorna o enunciado da pergunta."""
+        #Retorna o enunciado da pergunta.
         return self._enunciado
 
     @enunciado.setter
     def enunciado(self, valor: str) -> None:
-        """Valida e define o enunciado."""
+        #Valida e define o enunciado.
         if not isinstance(valor, str):
             raise TypeError("O enunciado deve ser uma string.")
 
@@ -41,12 +41,12 @@ class Pergunta:
 
     @property
     def alternativas(self) -> list[str]:
-        """Retorna uma cópia das alternativas."""
+        #Retorna uma cópia das alternativas.
         return self._alternativas.copy()
 
     @alternativas.setter
     def alternativas(self, valor: list[str]) -> None:
-        """Valida e define as alternativas."""
+        #Valida e define as alternativas.
         if not isinstance(valor, list):
             raise TypeError("As alternativas devem ser uma lista.")
 
@@ -74,12 +74,12 @@ class Pergunta:
 
     @property
     def indice_resposta_correta(self) -> int:
-        """Retorna o índice da resposta correta."""
+        #Retorna o índice da resposta correta.
         return self._indice_resposta_correta
 
     @indice_resposta_correta.setter
     def indice_resposta_correta(self, valor: int) -> None:
-        """Valida e define o índice da resposta correta."""
+        #Valida e define o índice da resposta correta.
         if not isinstance(valor, int) or isinstance(valor, bool):
             raise TypeError(
                 "O índice da resposta correta deve ser um inteiro."
@@ -94,12 +94,12 @@ class Pergunta:
 
     @property
     def dificuldade(self) -> str:
-        """Retorna a dificuldade da pergunta."""
+        #Retorna a dificuldade da pergunta.
         return self._dificuldade
 
     @dificuldade.setter
     def dificuldade(self, valor: str) -> None:
-        """Valida e define a dificuldade."""
+        #Valida e define a dificuldade.
         if not isinstance(valor, str):
             raise TypeError(
                 "A dificuldade deve ser uma string."
@@ -114,12 +114,12 @@ class Pergunta:
 
     @property
     def tema(self) -> str:
-        """Retorna o tema da pergunta."""
+        #Retorna o tema da pergunta.
         return self._tema
 
     @tema.setter
     def tema(self, valor: str) -> None:
-        """Valida e define o tema."""
+        #Valida e define o tema.
         if not isinstance(valor, str):
             raise TypeError(
                 "O tema deve ser uma string."
@@ -134,28 +134,33 @@ class Pergunta:
 
     @property
     def peso(self) -> int:
-        """Retorna quantos pontos a pergunta vale (depende da dificuldade)."""
+        #Retorna quantos pontos a pergunta vale (depende da dificuldade).
         return self.PESOS_POR_DIFICULDADE[self._dificuldade]
 
     def validar_alternativas(self) -> bool:
-        """Verifica se a quantidade de alternativas é válida."""
+        #Verifica se a quantidade de alternativas é válida.
         return 3 <= len(self._alternativas) <= 5
 
     def validar_indice_resposta(self) -> bool:
-        """Verifica se o índice aponta para uma alternativa existente."""
+        #Verifica se o índice aponta para uma alternativa existente.
         return 0 <= self._indice_resposta_correta < len(
             self._alternativas
         )
+    
+    def verificar_resposta(self, indice: int) -> bool:
+        #Retorna True se o índice informado é a resposta correta.
+        return indice == self._indice_resposta_correta
+
 
     def __str__(self) -> str:
-        """Retorna um resumo da pergunta."""
+        #Retorna um resumo da pergunta.
         return (
             f"{self._enunciado} "
             f"({self._tema} - {self._dificuldade})"
         )
 
     def __eq__(self, outra) -> bool:
-        """Compara perguntas pelo enunciado e pelo tema."""
+        #Compara perguntas pelo enunciado e pelo tema.
         if not isinstance(outra, Pergunta):
             return NotImplemented
 
@@ -165,5 +170,26 @@ class Pergunta:
         )
 
     def __hash__(self) -> int:
-        """Permite usar Pergunta em set/dict (coerente com o __eq__)."""
+        #Permite usar Pergunta em set/dict (coerente com o __eq__).
         return hash((self._enunciado, self._tema))
+    
+    def to_dict(self) -> dict:
+        #"""Converte a pergunta em um dicionário (pronto para virar JSON)."""
+        return {
+            "enunciado": self._enunciado,
+            "alternativas": self._alternativas.copy(),
+            "indice_resposta_correta": self._indice_resposta_correta,
+            "dificuldade": self._dificuldade,
+            "tema": self._tema,
+        }
+
+    @classmethod
+    def from_dict(cls, dados: dict):
+        #"""Cria uma pergunta a partir de um dicionário."""
+        return cls(
+            dados["enunciado"],
+            dados["alternativas"],
+            dados["indice_resposta_correta"],
+            dados["dificuldade"],
+            dados["tema"],
+        )

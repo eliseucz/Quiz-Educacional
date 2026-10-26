@@ -135,3 +135,9 @@ def test_pergunta_pode_ser_usada_em_set():
     p2 = criar_pergunta()
 
     assert len({p1, p2}) == 1
+
+def test_verificar_resposta():
+    pergunta = criar_pergunta()
+
+    assert pergunta.verificar_resposta(pergunta.indice_resposta_correta)
+    assert not pergunta.verificar_resposta(2)

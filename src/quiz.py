@@ -20,12 +20,12 @@ class Quiz:
 
     @property
     def titulo(self) -> str:
-        """Retorna o título do quiz."""
+        #Retorna o título do quiz.
         return self._titulo
 
     @titulo.setter
     def titulo(self, valor: str) -> None:
-        """Valida e define o título do quiz."""
+        #Valida e define o título do quiz.
         if not isinstance(valor, str):
             raise TypeError(
                 "O título deve ser uma string."
@@ -40,12 +40,12 @@ class Quiz:
 
     @property
     def perguntas(self) -> list[Pergunta]:
-        """Retorna uma cópia da lista de perguntas."""
+        #Retorna uma cópia da lista de perguntas.
         return self._perguntas.copy()
 
     @perguntas.setter
     def perguntas(self, valor: list[Pergunta]) -> None:
-        """Valida e define a lista de perguntas."""
+        #Valida e define a lista de perguntas.
         if not isinstance(valor, list):
             raise TypeError(
                 "As perguntas devem ser uma lista."
@@ -73,12 +73,12 @@ class Quiz:
 
     @property
     def numero_tentativas_maximo(self) -> int:
-        """Retorna o limite máximo de tentativas."""
+        #Retorna o limite máximo de tentativas.
         return self._numero_tentativas_maximo
 
     @numero_tentativas_maximo.setter
     def numero_tentativas_maximo(self, valor: int) -> None:
-        """Valida e define o limite de tentativas."""
+        #Valida e define o limite de tentativas.
         if not isinstance(valor, int) or isinstance(valor, bool):
             raise TypeError(
                 "O número máximo de tentativas deve ser um inteiro."
@@ -93,12 +93,12 @@ class Quiz:
 
     @property
     def tempo_limite_minutos(self) -> int | None:
-        """Retorna o tempo limite do quiz."""
+        #Retorna o tempo limite do quiz.
         return self._tempo_limite_minutos
 
     @tempo_limite_minutos.setter
     def tempo_limite_minutos(self, valor: int | None) -> None:
-        """Valida e define o tempo limite."""
+        #Valida e define o tempo limite.
         if valor is not None:
             if not isinstance(valor, int) or isinstance(valor, bool):
                 raise TypeError(
@@ -113,7 +113,7 @@ class Quiz:
         self._tempo_limite_minutos = valor
 
     def adicionar_pergunta(self, pergunta: Pergunta) -> None:
-        """Adiciona uma pergunta ao quiz."""
+        #Adiciona uma pergunta ao quiz.
         if not isinstance(pergunta, Pergunta):
             raise TypeError(
                 "A pergunta deve ser um objeto Pergunta."
@@ -128,25 +128,64 @@ class Quiz:
         self._perguntas.append(pergunta)
 
     def calcular_pontuacao_maxima(self) -> int:
-        """Soma os pesos de todas as perguntas do quiz."""
+        #Soma os pesos de todas as perguntas do quiz.
         return sum(pergunta.peso for pergunta in self._perguntas)
 
     @property
     def pontuacao_maxima(self) -> int:
-        """Pontuação máxima do quiz, sempre calculada automaticamente."""
+        #Pontuação máxima do quiz, sempre calculada automaticamente.
         return self.calcular_pontuacao_maxima()
 
     def __str__(self) -> str:
-        """Retorna um resumo do quiz."""
+        #Retorna um resumo do quiz.
         return (
             f"Quiz: {self._titulo} "
             f"({len(self._perguntas)} perguntas)"
         )
 
     def __len__(self) -> int:
-        """Retorna a quantidade de perguntas do quiz."""
+        #Retorna a quantidade de perguntas do quiz.
         return len(self._perguntas)
 
     def __iter__(self):
-        """Permite iterar pelas perguntas do quiz."""
+        #Permite iterar pelas perguntas do quiz.
         return iter(self._perguntas)
+    
+    def to_dict(self) -> dict:
+        """Converte o quiz em dicionário, guardando só referências às perguntas."""
+        return {
+            "titulo": self._titulo,
+            "numero_tentativas_maximo": self._numero_tentativas_maximo,
+            "tempo_limite_minutos": self._tempo_limite_minutos,
+            "perguntas": [
+                {"enunciado": pergunta.enunciado, "tema": pergunta.tema}
+                for pergunta in self._perguntas
+            ],
+        }
+
+    @classmethod
+    def from_dict(cls, dados: dict, perguntas_disponiveis: list[Pergunta]):
+        """Recria o quiz, reaproveitando os objetos Pergunta já carregados."""
+        por_chave = {
+            (pergunta.enunciado, pergunta.tema): pergunta
+            for pergunta in perguntas_disponiveis
+        }
+
+        perguntas = []
+        for referencia in dados["perguntas"]:
+            chave = (referencia["enunciado"], referencia["tema"])
+
+            if chave not in por_chave:
+                raise ValueError(
+                    f"Pergunta não encontrada: {referencia['enunciado']!r} "
+                    f"(tema {referencia['tema']!r})."
+                )
+
+            perguntas.append(por_chave[chave])
+
+        return cls(
+            dados["titulo"],
+            perguntas,
+            dados["numero_tentativas_maximo"],
+            dados["tempo_limite_minutos"],
+        )
